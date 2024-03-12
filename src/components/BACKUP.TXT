@@ -1,0 +1,211 @@
+import * as React from 'react';
+import {
+    Formik,
+    Form,
+    Field,
+} from 'formik';
+import axios from 'axios';
+import EditIcon from '@mui/icons-material/Edit';
+
+import { Button, Snackbar, Stack, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+interface MyFormValues {
+    firstName: string;
+}
+interface Todolist{
+    userId:number;
+    id:number;
+    title:string;
+    completed:boolean;
+}
+
+export const Basic: React.FC<{}> = () => {
+  const initialValues: MyFormValues = { firstName: '' };
+  const [open, setOpen] = React.useState(false);
+  const [title,settitle]=React.useState<string>('');
+  const[newtext,setnewtext]=React.useState<string>('');
+  const[test,settest]=React.useState<string>('');
+  
+  const [inputdata,Setinputdata]=React.useState<Todolist[]>([]);
+  const[id,setid]=React.useState<number>(0);
+  const[userid,setuserid]=React.useState<number>();
+  const [task, settask] = React.useState<Todolist[]>([]);
+  const[status,setstatus]=React.useState<Boolean>(false);
+  
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  
+  const searchdata = () => {
+    axios
+        .get<Todolist[]>(`https://jsonplaceholder.typicode.com/todos/`)
+        .then((response) => {
+            console.log(response.data);
+            const responseData = response.data;
+            const useraid:Number=1;
+            const found = responseData.find((item) => item.userId === useraid);
+            console.log(found);
+            settask(responseData);
+        
+            
+            console.log(JSON.stringify(found?.title));
+
+            setOpen(true);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+  };
+  
+  const user=1;
+  const handleSubmit = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    const newtask = {
+        userId: user,
+        id: new Date().getTime(),
+        title: title,
+       completed: status,
+    };
+
+    console.log(newtask);
+    
+    const updated = [...task, { ...newtask, completed: false }];
+    settask(updated);
+    
+    axios.post(`https://jsonplaceholder.typicode.com/todos`, newtask)
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+  }
+  
+  const handleUpdateClick = () => {
+    const id = 11; // ID of the todo item to update
+    const userId = 1; // User ID associated with the todo item
+    const newtext = 'Your new todo text'; // Define newtext with the new todo text
+
+    axios.put(`https://jsonplaceholder.typicode.com/todos/${id}`, { userId, title: newtext })
+        .then(response => {
+            settest(JSON.stringify(response.data));
+            console.log(test);
+        })
+        .catch(error => {
+            console.log('Error:', error);
+        });
+};
+
+  const getdata=()=>{
+    const updated1=axios.get<Todolist[]>(`https://jsonplaceholder.typicode.com/todos`).then((response)=>{
+       Setinputdata(response.data);
+    }).catch((error)=>{
+        console.log(error);
+    });
+  }
+  
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh', flexDirection:'column'}}>
+        <Stack spacing={4} direction="row">
+            <div>
+                <Formik
+                    initialValues={initialValues}
+                    onSubmit={(values, actions) => {
+                        axios
+                            .post(`https://jsonplaceholder.typicode.com/posts`, values)
+                            .then((response) => {
+                                console.log(response);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    }}
+                >
+                    <Form style={{backgroundColor:"" }}>
+                        <Stack>
+                            <label htmlFor="title">Title</label>
+                            <Field id="title" name="title" placeholder="title" onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        settitle(event.target.value);
+                                    }} />
+                        </Stack>
+
+                        <Stack>
+                            <label htmlFor="completed">Completed</label>
+
+                            <Field
+            id="completed"
+            name="completed"
+            type="checkbox"
+          />
+                        </Stack>
+                        <Stack>
+                            <button type="submit" onClick={handleSubmit}>Submit</button>
+                        </Stack>
+                        <br />
+                        <Stack>
+                            <label htmlFor="completed">Get Data by Id</label>
+                        </Stack>
+                        <Stack>
+                            <Field
+                                id="userid"
+                                name="get by id"
+                                type="text"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setuserid(parseInt(e.target.value));
+                                }}
+                            />
+                        </Stack>
+                        <Stack>
+                            {/* <Field
+                                id="id"
+                                name="get by id"
+                                type="text"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setid(parseInt(e.target.value));
+                                }}
+                            /> */}
+                        </Stack>
+                        <button type="submit" onClick={searchdata}>
+                            Get Data
+                        </button>
+
+                        <Stack>
+                            <Field
+                                id="id"
+                                name="get by id"
+                                type="text"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setid(parseInt(e.target.value));
+                                }}
+                            />
+                        </Stack>
+                        <button type="submit" onClick={handleUpdateClick}>
+                           update data
+                        </button>
+                    </Form>
+                </Formik>
+            </div>
+        </Stack>
+        <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message="Data Recieved"
+        />
+
+{task.map((task, index) => ( <div style={{marginRight:"2vh"}}>
+             {/* <Typography variant="h6">User ID: {task.userId}</Typography> */}
+                {/* <Typography variant="h6">ID: {task.id}</Typography> */}
+                <Typography variant="h6">Title: {task.title}</Typography>
+                
+                <Button onClick={handleUpdateClick}><EditIcon/></Button>
+                <Button onClick={handleUpdateClick}><DeleteIcon/></Button>
+    
+                </div>))}
+               
+    </div>
+  );
+}
