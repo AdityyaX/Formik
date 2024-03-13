@@ -7,6 +7,16 @@ const initialstate=  {
         title: "delectus aut autem",
         completed: false}]
 }
+
+const ialstate=  {
+
+    todos:[{    userId: '1',
+        id: "1",
+        title: "delectus aut autem",
+        completed: false}]
+}
+
+
  export const todoSlice = createSlice({ 
     name: "todos",
     initialState: initialstate,

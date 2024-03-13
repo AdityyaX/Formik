@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UseDispatch, useDispatch } from 'react-redux';
+import {  useDispatch,useSelector } from 'react-redux';
 import {
     Formik,
     Form,
@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, Snackbar, Stack, Typography } from '@mui/material';
 import * as Yup from 'yup';
 import { addtodo, removetodo } from '../features/todo/todoSlice';
+import { RootState } from '../app/store';
 interface MyFormValues {
     title: string;
     completed: boolean;
@@ -107,13 +108,15 @@ const dispatch = useDispatch();
     }
 
 
-    const handleDelete = (values: { title: any; }) => {
-        // e.preventDefault();
-          
-console.log(task);
+    // const handleDelete = (values: Todo) => {
+    //     console.log("deleting");
+    //     console.log("values:", values);
+    //     const updatedTaskList = task.filter(todo => todo.id !== values.id);
+    //     setTask(updatedTaskList);
+    //     dispatch(removetodo(values.title)as any); // Explicitly specify the type of the action
 
-        dispatch(removetodo(values.title)as any); // Explicitly specify the type of the action
-    }
+
+    // }
 
 
     // const handleUpdateClick = (id: number, userId: number) => {
@@ -149,7 +152,33 @@ console.log(task);
     //             console.log('Error deleting task:', error);
     //         });
     // };
+  
 
+
+    // ...
+
+
+    const todos = useSelector((state: RootState) => state.todos);
+    // const dispatch = useDispatch();
+
+    const handleDelete = (values: Todo) => {
+        const updatedTaskList = task.filter(todo => todo.id !== values.id);
+        setTask(updatedTaskList);
+        dispatch(removetodo(values.id) as any); // Explicitly specify the type of the action
+      };
+
+    // ...
+
+
+
+  interface initialstate{     
+
+        todos:[{    userId: '1',
+            id: "1",
+            title: "delectus aut autem",
+            completed: false}]
+    }
+//     const todos = useSelector((state:initialstate) => state.todos);
     return (
         <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', height: '70vh', flexDirection: 'row' }}>
             <div>
@@ -188,7 +217,7 @@ console.log(task);
         {task.map((task) => (
             <div key={task.title} style={{ marginRight: "2vh" }}>
                 <Typography variant="h6">{task.title}</Typography>
-               
+                <Button onClick={() => handleDelete(task)}><DeleteIcon/></Button>
             </div>
         ))}
         </div>
@@ -198,3 +227,7 @@ console.log(task);
     </div>
     );
 }
+function state(state: unknown): unknown {
+    throw new Error('Function not implemented.');
+}
+
