@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, Snackbar, Stack, Typography } from '@mui/material';
 import * as Yup from 'yup';
-import { addtodo, removetodo } from '../features/todo/todoSlice';
+import { addtodo, removetodo,updatetodo } from '../features/todo/todoSlice';
 // import { removetodo } from '../features/todo/todoSlice';
 import { RootState } from '../app/store';
 
@@ -253,6 +253,11 @@ const dispatch = useDispatch();
                 console.log("deleting");
                 
                 }}><DeleteIcon/></Button>
+                <button onClick={(event:any) => {
+                    console.log("task =", task.id);
+                    dispatch(updatetodo(task.id) as any)
+                    console.log("updating");
+                }}><EditIcon/></button>
             </div>
         ))}
       

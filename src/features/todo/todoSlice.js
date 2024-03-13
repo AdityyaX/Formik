@@ -59,10 +59,24 @@ const initialstate=  {
                 .catch(error => {
                     console.log('Error deleting task:', error);
                 });
+        },
+        updatetodo: (state, action) => {
+            const todoId = action.payload;
+            const todo = state.todos.find(todo => todo.id === todoId);
+            todo.title = "Updated Task";
+            todo.completed = !todo.completed;
+            state.todos = state.todos.map(todo => todo.id === todoId ? todo : todo);
+            axios.put(`https://jsonplaceholder.typicode.com/todos/${todoId}`, todo)
+                .then(response => {
+                    console.log('Task updated successfully.');
+                })
+                .catch(error => {
+                    console.log('Error updating task:', error);
+                });
         }
         
     }}
     )
-    export const { addtodo, removetodo} = todoSlice.actions;
+    export const { addtodo, removetodo ,updatetodo} = todoSlice.actions;
 
     export default todoSlice.reducer;
