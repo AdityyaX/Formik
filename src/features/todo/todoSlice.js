@@ -1,5 +1,6 @@
 import axios from "axios";
-import { createSlice,nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
+
 const initialstate=  {
 
     todos:[{    userId: '1',
@@ -8,13 +9,13 @@ const initialstate=  {
         completed: false}]
 }
 
-const ialstate=  {
+// const ialstate=  {
 
-    todos:[{    userId: '1',
-        id: "1",
-        title: "delectus aut autem",
-        completed: false}]
-}
+//     todos:[{    userId: '1',
+//         id: "1",
+//         title: "delectus aut autem",
+//         completed: false}]
+// }
 
 
  export const todoSlice = createSlice({ 
@@ -43,20 +44,25 @@ const ialstate=  {
                     console.log(error);
                 });
         },
-        },
+        
         removetodo: (state, action) => {
-            axios.delete(`https://jsonplaceholder.typicode.com/todos/${state.id}`)
-                    .then(response => {
+            const todoId = action.payload;
+            
+            state.todos = state.todos.filter(todo => todo.id !== todoId);
 
-                        state.todos = state.todos.filter((todo) => todo.id !== action.payload);
-                        console.log('Task deleted successfully.');
-                    })
-                    .catch(error => {
-                        console.log('Error deleting task:', error);
-                    });
-          
-        } 
-    }
+            console.log(todoId);
+        
+            axios.delete(`https://jsonplaceholder.typicode.com/todos/${todoId}`)
+                .then(response => {
+                    console.log('Task deleted successfully.');
+                })
+                .catch(error => {
+                    console.log('Error deleting task:', error);
+                });
+        }
+        
+    }}
     )
-    export const { addtodo, removetodo } = todoSlice.actions;
+    export const { addtodo, removetodo} = todoSlice.actions;
+
     export default todoSlice.reducer;

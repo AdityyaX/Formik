@@ -12,7 +12,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, Snackbar, Stack, Typography } from '@mui/material';
 import * as Yup from 'yup';
 import { addtodo, removetodo } from '../features/todo/todoSlice';
+// import { removetodo } from '../features/todo/todoSlice';
 import { RootState } from '../app/store';
+
 interface MyFormValues {
     title: string;
     completed: boolean;
@@ -42,6 +44,7 @@ export const Basic: React.FC<{}> = () => {
     // const [test, setTest] = useState<string>('');
     const [task, setTask] = useState<Todo[]>([]);
 
+    // const todos = useSelector(state:initialValues => state.todos)
 
 const dispatch = useDispatch();
     const handleCloseSnackbar = () => {
@@ -89,7 +92,13 @@ const dispatch = useDispatch();
         // e.preventDefault();
 
             
-            console.log("debvugging");
+        // console.log("list is here :",(todoss));
+        // console.log("todosc:",todoss[0]);
+        // todoss[0].map((todo: { title: string; }) => console.log(todo.title));
+        
+        
+        console.log("task is here:",task);
+        
             
             const newTask: Todo = {
                 userId: 1, 
@@ -98,6 +107,8 @@ const dispatch = useDispatch();
                 completed: false
         };
 
+
+        
         const updatedTaskList = [...task, newTask];
         setTask(updatedTaskList);
         console.log("task:", task);
@@ -159,14 +170,16 @@ const dispatch = useDispatch();
 
 
     const todos = useSelector((state: RootState) => state.todos);
+    console.log("main list is here",todos.todos);
+    
+
     // const dispatch = useDispatch();
-
-    const handleDelete = (values: Todo) => {
-        const updatedTaskList = task.filter(todo => todo.id !== values.id);
+    const handleDelete = (id:any) => {
+        const updatedTaskList = task.filter(todo => todo.id !== id);
+        console.log("updtedask = ", updatedTaskList);
         setTask(updatedTaskList);
-        dispatch(removetodo(values.id) as any); // Explicitly specify the type of the action
-      };
-
+        // dispatch(removetodo(id) as any); // Assuming the payload for removetodo is the todo ID
+    };
     // ...
 
 
@@ -178,7 +191,8 @@ const dispatch = useDispatch();
             title: "delectus aut autem",
             completed: false}]
     }
-//     const todos = useSelector((state:initialstate) => state.todos);
+    // const todoss = useSelector((state:initialstate) => state.todos);
+   
     return (
         <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', height: '70vh', flexDirection: 'row' }}>
             <div>
@@ -214,12 +228,34 @@ const dispatch = useDispatch();
         />
     
         <div style={{display:'flex',justifyContent:'',flexDirection:"column"}}>
-        {task.map((task) => (
+        {/* {task.map((task) => (
             <div key={task.title} style={{ marginRight: "2vh" }}>
                 <Typography variant="h6">{task.title}</Typography>
-                <Button onClick={() => handleDelete(task)}><DeleteIcon/></Button>
+                <Button onClick={(event:any) =>{
+                     dispatch(removetodo(task.id) as any)
+                    console.log(task.id);
+                    
+                console.log("deleting");
+                
+                }}><DeleteIcon/></Button>
+            </div>
+        ))} */}
+
+             {todos.todos.map((task) => (
+            <div key={task.title} style={{ marginRight: "2vh" }}>
+                <Typography variant="h6">{task.title}</Typography>
+                <Button onClick={(event:any) =>{
+                    console.log("task =", task.id);
+
+                     dispatch(removetodo(task.id) as any)
+                    console.log(task);
+                    
+                console.log("deleting");
+                
+                }}><DeleteIcon/></Button>
             </div>
         ))}
+      
         </div>
        
 
