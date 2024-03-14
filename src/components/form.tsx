@@ -6,7 +6,6 @@ import {
     Field,
     FormikHelpers,
 } from 'formik';
-import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, Snackbar, Stack, Typography } from '@mui/material';
