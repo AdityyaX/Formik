@@ -13,14 +13,22 @@ import * as Yup from 'yup';
 import { addtodo, removetodo,updatetodo } from '../features/todo/todoSlice';
 // import { removetodo } from '../features/todo/todoSlice';
 import { RootState } from '../app/store';
+import { useGettodoQuery } from '../features/todo/createapilice';
 
 interface MyFormValues {
     title: string;
     completed: boolean;
 }
 
+const data=useGettodoQuery('');
+console.log("data is here",data);
 
-interface Todo {
+// const data =useGettodoQuery();
+// console.log("data is here",data);
+
+
+
+export  interface Todo {
     userId: number;
     id: number;
     title: string;

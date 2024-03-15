@@ -3,7 +3,7 @@ import { Formik, Form, Field } from "formik";
 import {useSelector, useDispatch} from "react-redux";
 import { login } from "../features/auth/loginslice";
 
-interface MyFormValues {
+export interface MyFormValues {
    user: string;
   }
  
