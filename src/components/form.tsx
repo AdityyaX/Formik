@@ -13,8 +13,8 @@ import * as Yup from 'yup';
 import { addtodo, removetodo,updatetodo } from '../features/todo/todoSlice';
 // import { removetodo } from '../features/todo/todoSlice';
 import { RootState } from '../app/store';
-import { useGettodoQuery } from '../features/todo/createapilice';
-
+import { useGettodoQuery,useAddtodoMutation } from '../features/todo/createapilice';
+import { todoapi } from "../features/todo/createapilice";
 interface MyFormValues {
     title: string;
     completed: boolean;
@@ -175,6 +175,20 @@ const dispatch = useDispatch();
 
     // ...
 
+   
+    const { data, error, isLoading, isFetching, isSuccess, isError } = useGettodoQuery();
+
+    const handlePost = () => {
+        const newTask: Todo = {
+            userId: 1,
+            id: new Date().getTime(),
+            title: "New Task",
+            completed: false
+        };
+
+        dispatch(addtodo(newTask) as any); // Assuming the payload for addtodo is the new task object
+    };
+
 
     const todos = useSelector((state: RootState) => state.todos);
     console.log("main list is here",todos.todos);
@@ -200,6 +214,16 @@ const dispatch = useDispatch();
     }
     // const todoss = useSelector((state:initialstate) => state.todos);
    
+    const Read = () => {
+       const []=useAddtodoMutation();
+       
+addtodo(task);
+console.log("post request done");
+
+    }
+      
+
+
     return (
         <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', height: '70vh', flexDirection: 'row' }}>
             <div>
@@ -221,7 +245,7 @@ const dispatch = useDispatch();
                         {errors.completed && touched.completed && <div>{errors.completed}</div>}
                     </Stack>
                     <Stack>
-                        <button type="submit" >Submit</button>
+                        <button type="submit" onClick={Read} >Submit</button>
                     </Stack>
                 </Form>
             )}
