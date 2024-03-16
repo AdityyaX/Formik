@@ -15,13 +15,13 @@ import { addtodo, removetodo,updatetodo } from '../features/todo/todoSlice';
 import { RootState } from '../app/store';
 import { useGettodoQuery,useAddtodoMutation } from '../features/todo/createapilice';
 import { todoapi } from "../features/todo/createapilice";
+
 interface MyFormValues {
     title: string;
     completed: boolean;
 }
 
-const data=useGettodoQuery('');
-console.log("data is here",data);
+
 
 // const data =useGettodoQuery();
 // console.log("data is here",data);
@@ -50,6 +50,14 @@ export const Basic: React.FC<{}> = () => {
     // const [newText, setNewText] = useState<string>('');
     // const [test, setTest] = useState<string>('');
     const [task, setTask] = useState<Todo[]>([]);
+    // Move the hook to the top level of your component
+const [createtodo, dataorg] = useAddtodoMutation();
+const data=useGettodoQuery('');
+console.log("data is here",data);
+const Read = () => {
+    createtodo(task);
+    console.log("post request done");
+}
 
     // const todos = useSelector(state:initialValues => state.todos)
 
@@ -176,7 +184,7 @@ const dispatch = useDispatch();
     // ...
 
    
-    const { data, error, isLoading, isFetching, isSuccess, isError } = useGettodoQuery();
+    // const { data, error, isLoading, isFetching, isSuccess, isError } = useGettodoQuery();
 
     const handlePost = () => {
         const newTask: Todo = {
@@ -214,13 +222,13 @@ const dispatch = useDispatch();
     }
     // const todoss = useSelector((state:initialstate) => state.todos);
    
-    const Read = () => {
-       const []=useAddtodoMutation();
+//     const Read = () => {
+//         const [createtodo, dataorg]=useAddtodoMutation();
        
-addtodo(task);
-console.log("post request done");
+// addtodo(task);
+// console.log("post request done");
 
-    }
+//     }
       
 
 
@@ -284,6 +292,7 @@ console.log("post request done");
                 console.log("deleting");
                 
                 }}><DeleteIcon/></Button>
+                <button onClick={Read}></button>
                 <button onClick={(event:any) => {
                     console.log("task =", task.id);
                     dispatch(updatetodo(task.id) as any)

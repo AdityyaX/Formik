@@ -10,9 +10,13 @@ const rootReducer = combineReducers({
   [todoapi.reducerPath]: todoapi.reducer,
   
   userLogin:loginReducer,
+  
+});
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(todoapi.middleware),
 });
 
-export const store = configureStore({
-  reducer: rootReducer
-});
+
 export type RootState = ReturnType<typeof rootReducer>;
